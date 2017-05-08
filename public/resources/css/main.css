@@ -102,16 +102,15 @@ body {
   font-size: 2.4rem;
   background-color: #e91e63;
   color: #fce4ec;
-  padding: 1rem 1.2rem;
+  padding: 0;
+  margin: 0;
   border-radius: 50%;
-  display: inline-block;
-  width: auto;
-  max-width: 4.4rem;
-  height: auto;
-  max-height: 4.4rem;
+  border: solid 0.2rem #e91e63;
   position: absolute;
   top: 100%;
   left: 100%;
+  width: 4.4rem;
+  height: 4.4rem;
   -webkit-transform-origin: 50% 50%;
   -moz-transform-origin: 50% 50%;
   -o-transform-origin: 50% 50%;
@@ -124,25 +123,27 @@ body {
   transform: translate(-50%, -50%);
   -webkit-box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
-  -webkit-transition: all 0.1s ease-in-out;
-  -moz-transition: all 0.1s ease-in-out;
-  -o-transition: all 0.1s ease-in-out;
-  -ms-transition: all 0.1s ease-in-out;
-  transition: all 0.1s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   z-index: 2;
 }
 #restart-button:before {
   display: inline-block;
+  top: 50%;
+  left: 50%;
   -webkit-transform-origin: 49% 53%;
   -moz-transform-origin: 49% 53%;
   -o-transform-origin: 49% 53%;
   -ms-transform-origin: 49% 53%;
   transform-origin: 49% 53%;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
+  -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  -moz-transform: translate(-50%, -50%) rotate(0deg);
+  -o-transform: translate(-50%, -50%) rotate(0deg);
+  -ms-transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
@@ -153,17 +154,15 @@ body {
   cursor: default;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.4rem;
+  border: solid 0.2rem #fff;
   -webkit-transform: translate(0, 0);
   -moz-transform: translate(0, 0);
   -o-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  max-height: 100%;
-  border-radius: 0.4rem;
-  border: solid 0.2rem #fff;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
@@ -171,14 +170,6 @@ body {
   transition: all 0.3s ease-in-out;
 }
 #restart-button.loading:before {
-  display: inline-block;
-  top: 50%;
-  left: 50%;
-  -webkit-transform-origin: 49% 53%;
-  -moz-transform-origin: 49% 53%;
-  -o-transform-origin: 49% 53%;
-  -ms-transform-origin: 49% 53%;
-  transform-origin: 49% 53%;
   -webkit-transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
   -moz-transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
   -o-transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
@@ -195,6 +186,50 @@ body {
   -ms-animation: restart-button-loading-animation 0.7s infinite linear;
   animation: restart-button-loading-animation 0.7s infinite linear;
 }
+#restart-button #loading-percentage {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  color: #101010;
+  font-family: Roboto, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -o-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  z-index: 3;
+}
+#restart-button #loading-percentage.show {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
 #restart-button:not(.loading):hover {
   color: #fff;
   -webkit-transform: translate(-50%, -50%) scale(1.2);
@@ -206,11 +241,11 @@ body {
   box-shadow: 0 0.75rem 1.25rem rgba(0,0,0,0.4);
 }
 #restart-button:not(.loading):hover:before {
-  -webkit-transform: rotate(360deg);
-  -moz-transform: rotate(360deg);
-  -o-transform: rotate(360deg);
-  -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
+  -webkit-transform: translate(-50%, -50%) rotate(360deg);
+  -moz-transform: translate(-50%, -50%) rotate(360deg);
+  -o-transform: translate(-50%, -50%) rotate(360deg);
+  -ms-transform: translate(-50%, -50%) rotate(360deg);
+  transform: translate(-50%, -50%) rotate(360deg);
 }
 #restart-button:not(.loading):active {
   background-color: #c2185b;
@@ -223,11 +258,11 @@ body {
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
 }
 #restart-button:not(.loading):active:before {
-  -webkit-transform: rotate(720deg);
-  -moz-transform: rotate(720deg);
-  -o-transform: rotate(720deg);
-  -ms-transform: rotate(720deg);
-  transform: rotate(720deg);
+  -webkit-transform: translate(-50%, -50%) rotate(720deg);
+  -moz-transform: translate(-50%, -50%) rotate(720deg);
+  -o-transform: translate(-50%, -50%) rotate(720deg);
+  -ms-transform: translate(-50%, -50%) rotate(720deg);
+  transform: translate(-50%, -50%) rotate(720deg);
 }
 #click-count {
   cursor: default;
@@ -265,48 +300,6 @@ body {
   -o-transform: scale(1.3);
   -ms-transform: scale(1.3);
   transform: scale(1.3);
-}
-#loading-percentage {
-  position: absolute;
-  bottom: 1rem;
-  left: 0;
-  width: 100%;
-  height: auto;
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.2rem;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -o-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: all 0.1s ease-in-out;
-  -moz-transition: all 0.1s ease-in-out;
-  -o-transition: all 0.1s ease-in-out;
-  -ms-transition: all 0.1s ease-in-out;
-  transition: all 0.1s ease-in-out;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  z-index: 3;
-}
-#loading-percentage.show {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -o-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
 }
 @-moz-keyframes restart-button-loading-animation {
   from {

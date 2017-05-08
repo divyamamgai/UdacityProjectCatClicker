@@ -10,7 +10,8 @@
     var clickCount = 0;
 
     function xhrOnError() {
-        alert('An error occurred while fetching a cure Cat image!\nRetrying in 5 seconds...');
+        alert('An error occurred while fetching a cure Cat image!\nRetrying...');
+        initialize();
     }
 
     function xhrOnProgress(event) {
@@ -20,27 +21,25 @@
     }
 
     function initialize() {
-        if (!$restartButton.hasClass('loading')) {
-            $restartButton.addClass('loading');
-            $loadingPercentage.addClass('show');
-            var xhr = new XMLHttpRequest();
-            xhr.onprogress = xhrOnProgress;
-            xhr.onerror = xhrOnError;
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    var url = window.URL || window.webkitURL;
-                    $image.css('background-image', 'url(' + url.createObjectURL(xhr.response) + ')');
-                    $clickCount.text(clickCount = 0);
-                    $restartButton.removeClass('loading');
-                    $loadingPercentage
-                        .removeClass('show')
-                        .text('0%');
-                }
-            };
-            xhr.open('GET', 'http://thecatapi.com/api/images/get?api_key=MTgyMTA2&format=src&category=dream');
-            xhr.responseType = 'blob';
-            xhr.send();
-        }
+        $restartButton.addClass('loading');
+        $loadingPercentage.addClass('show');
+        var xhr = new XMLHttpRequest();
+        xhr.onprogress = xhrOnProgress;
+        xhr.onerror = xhrOnError;
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                var url = window.URL || window.webkitURL;
+                $image.css('background-image', 'url(' + url.createObjectURL(xhr.response) + ')');
+                $clickCount.text(clickCount = 0);
+                $restartButton.removeClass('loading');
+                $loadingPercentage
+                    .removeClass('show')
+                    .text('0%');
+            }
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', 'http://thecatapi.com/api/images/get?api_key=MTgyMTA2&format=src&category=dream');
+        xhr.send();
     }
 
     function clickSoundPlay(clickSound) {
@@ -62,7 +61,9 @@
 
     function restartButtonOnClick(event) {
         event.stopPropagation();
-        initialize();
+        if (!$restartButton.hasClass('loading')) {
+            initialize();
+        }
     }
 
     $(function () {

@@ -72,47 +72,67 @@ html, body {
     font-size: 2.4rem
     background-color: #E91E63
     color: #FCE4EC
-    padding: 1rem 1.2rem
+    padding: 0
+    margin: 0
     border-radius: 50%
-    display: inline-block
-    width: auto
-    max-width: 4.4rem
-    height: auto
-    max-height: 4.4rem
+    border: solid 0.2rem #E91E63
     position: absolute
     top: 100%
     left: 100%
+    width: 4.4rem
+    height: 4.4rem
     transform-origin: 50% 50%
     transform: translate(-50%, -50%)
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
-    transition: all 0.1s ease-in-out
+    transition: all 0.3s ease-in-out
     z-index: 2
     &:before {
         display: inline-block
+        top: 50%
+        left: 50%
         transform-origin: 49% 53%
-        transform: rotate(0deg)
+        transform: translate(-50%, -50%) rotate(0deg)
         transition: all 0.3s ease-in-out
     }
     &.loading {
         cursor: default
         top: 0
         left: 0
-        transform: translate(0, 0)
         width: 100%
-        max-width: 100%
         height: 100%
-        max-height: 100%
         border-radius: 0.4rem
         border: solid 0.2rem #FFFFFF
+        transform: translate(0, 0)
         transition: all 0.3s ease-in-out
         &:before {
-            display: inline-block
-            top: 50%
-            left: 50%
-            transform-origin: 49% 53%
             transform: translate(-50%, -50%) scale(1.5) rotate(0deg)
             transition: all 0.4s ease-in-out
             animation: restart-button-loading-animation 0.7s infinite linear
+        }
+    }
+    #loading-percentage {
+        position: absolute
+        bottom: 1rem
+        left: 0
+        width: 100%
+        height: auto
+        text-align: center
+        color: #101010
+        font-family: Roboto, sans-serif
+        font-size: 1.4rem
+        font-weight: 600
+        letter-spacing: 0.2rem
+        opacity: 0
+        transform: scale(0)
+        transition: all 0.1s ease-in-out
+        -webkit-user-select: none
+        -moz-user-select: none
+        -ms-user-select: none
+        user-select: none
+        z-index: 3
+        &.show {
+            opacity: 1
+            transform: scale(1)
         }
     }
 }
@@ -131,7 +151,7 @@ html, body {
     transform: translate(-50%, -50%) scale(1.2)
     box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.4)
     &:before {
-        transform: rotate(360deg)
+        transform: translate(-50%, -50%) rotate(360deg)
     }
 }
 
@@ -140,7 +160,7 @@ html, body {
     transform: translate(-50%, -50%) scale(1.1)
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
     &:before {
-        transform: rotate(720deg)
+        transform: translate(-50%, -50%) rotate(720deg)
     }
 }
 
@@ -165,28 +185,4 @@ html, body {
     font-weight: 800
     color: #FFFFFF
     transform: scale(1.3)
-}
-
-#loading-percentage {
-    position: absolute
-    bottom: 1rem
-    left: 0
-    width: 100%
-    height: auto
-    text-align: center
-    font-size: 1.4rem
-    font-weight: 600
-    letter-spacing: 0.2rem
-    opacity: 0
-    transform: scale(0)
-    transition: all 0.1s ease-in-out
-    -webkit-user-select: none
-    -moz-user-select: none
-    -ms-user-select: none
-    user-select: none
-    z-index: 3
-    &.show {
-        opacity: 1
-        transform: scale(1)
-    }
 }
