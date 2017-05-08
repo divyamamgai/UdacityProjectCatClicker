@@ -1,0 +1,192 @@
+// For automatic CSS vendor prefixing.
+@import 'nib'
+
+// Force Box Model on all elements.
+*, *:after, *:before {
+    position: relative
+    box-sizing: border-box
+}
+
+html, body {
+    font-family: Roboto, sans-serif
+    font-size: 10px
+    margin: 0
+    padding: 0
+    background-color: #F4F4F4
+}
+
+#heading {
+    cursor: default
+    color: #E91E63
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)
+    font-size: 2.8rem
+    text-align: center
+    margin: 1.5rem
+    padding: 0
+    text-transform: uppercase
+    letter-spacing: 0.4rem
+    user-select: none
+    span {
+        color: #212121
+    }
+}
+
+#image-container {
+    left: 50vw
+    transform-origin: 50% 50%
+    transform: translateX(-50%)
+    width: 100%;
+    max-width: 40rem
+    height: 30rem
+    margin: 0;
+    padding: 0;
+    border: solid 0.4rem #212121
+    border-radius: 0.8rem
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
+    user-select: none
+    #image-wrapper {
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        border-radius: 0.4rem
+        overflow: hidden
+        #image {
+            background: center no-repeat
+            background-size: cover
+            width: 100%
+            height: 100%
+            transform-origin: 50% 50%
+            transform: scale(1)
+            transition: all 0.3s ease-in-out
+        }
+    }
+    &.clicked #image-wrapper #image {
+        transform: scale(1.1)
+    }
+}
+
+#restart-button {
+    cursor: pointer
+    font-size: 2.4rem
+    background-color: #E91E63
+    color: #FCE4EC
+    padding: 1rem 1.2rem
+    border-radius: 50%
+    display: inline-block
+    width: auto
+    max-width: 4.4rem
+    height: auto
+    max-height: 4.4rem
+    position: absolute
+    top: 100%
+    left: 100%
+    transform-origin: 50% 50%
+    transform: translate(-50%, -50%)
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
+    transition: all 0.1s ease-in-out
+    z-index: 2
+    &:before {
+        display: inline-block
+        transform-origin: 49% 53%
+        transform: rotate(0deg)
+        transition: all 0.3s ease-in-out
+    }
+    &.loading {
+        cursor: default
+        top: 0
+        left: 0
+        transform: translate(0, 0)
+        width: 100%
+        max-width: 100%
+        height: 100%
+        max-height: 100%
+        border-radius: 0.4rem
+        border: solid 0.2rem #FFFFFF
+        transition: all 0.3s ease-in-out
+        &:before {
+            display: inline-block
+            top: 50%
+            left: 50%
+            transform-origin: 49% 53%
+            transform: translate(-50%, -50%) scale(1.5) rotate(0deg)
+            transition: all 0.4s ease-in-out
+            animation: restart-button-loading-animation 0.5s infinite linear
+        }
+    }
+}
+
+@keyframes restart-button-loading-animation {
+    from {
+        transform: translate(-50%, -50%) scale(1.5) rotate(0deg)
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1.5) rotate(360deg)
+    }
+}
+
+#restart-button:not(.loading):hover {
+    color: #FFFFFF
+    transform: translate(-50%, -50%) scale(1.2)
+    box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.4)
+    &:before {
+        transform: rotate(360deg)
+    }
+}
+
+#restart-button:not(.loading):active {
+    background-color: #C2185B
+    transform: translate(-50%, -50%) scale(1.1)
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
+    &:before {
+        transform: rotate(720deg)
+    }
+}
+
+#click-count {
+    cursor: default
+    font-size: 1.8rem
+    font-weight: 400
+    background-color: #212121
+    color: #E0E0E0
+    padding: 1rem 1.5rem
+    border-radius: 0 1rem 0 1rem
+    position: absolute
+    bottom: -0.4rem
+    left: -0.4rem
+    transform-origin: 0 100%
+    transform: scale(1)
+    transition: all 0.1s ease-in-out
+    z-index: 1
+}
+
+#click-count.image-clicked {
+    font-weight: 800
+    color: #FFFFFF
+    transform: scale(1.3)
+}
+
+#loading-percentage {
+    position: absolute
+    bottom: 1rem
+    left: 0
+    width: 100%
+    height: auto
+    text-align: center
+    font-size: 1.4rem
+    font-weight: 600
+    letter-spacing: 0.2rem
+    opacity: 0
+    transform: scale(0)
+    transition: all 0.1s ease-in-out
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
+    z-index: 3
+    &.show {
+        opacity: 1
+        transform: scale(1)
+    }
+}
