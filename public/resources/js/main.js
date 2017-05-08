@@ -38,7 +38,7 @@
             }
         };
         xhr.responseType = 'blob';
-        xhr.open('GET', 'http://thecatapi.com/api/images/get?api_key=MTgyMTA2&format=src&category=dream');
+        xhr.open('GET', 'https://thecatapi.com/api/images/get?api_key=MTgyMTA2&format=src&category=dream');
         xhr.send();
     }
 
