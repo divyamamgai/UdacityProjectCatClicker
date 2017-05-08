@@ -68,7 +68,7 @@ body {
   overflow: hidden;
 }
 #image-container #image-wrapper #image {
-  background: center no-repeat;
+  background: #000 center no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
@@ -189,11 +189,11 @@ body {
   -o-transition: all 0.4s ease-in-out;
   -ms-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -webkit-animation: restart-button-loading-animation 0.5s infinite linear;
-  -moz-animation: restart-button-loading-animation 0.5s infinite linear;
-  -o-animation: restart-button-loading-animation 0.5s infinite linear;
-  -ms-animation: restart-button-loading-animation 0.5s infinite linear;
-  animation: restart-button-loading-animation 0.5s infinite linear;
+  -webkit-animation: restart-button-loading-animation 0.7s infinite linear;
+  -moz-animation: restart-button-loading-animation 0.7s infinite linear;
+  -o-animation: restart-button-loading-animation 0.7s infinite linear;
+  -ms-animation: restart-button-loading-animation 0.7s infinite linear;
+  animation: restart-button-loading-animation 0.7s infinite linear;
 }
 #restart-button:not(.loading):hover {
   color: #fff;

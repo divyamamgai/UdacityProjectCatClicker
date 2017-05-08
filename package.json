@@ -42,6 +42,7 @@
     "nib": "latest",
     "clean-css": "latest",
     "clean-css-cli": "latest",
+    "replace": "latest",
     "rimraf": "latest"
   },
   "scripts": {
@@ -51,6 +52,9 @@
     "postbuild:js": "uglifyjs public/resources/js/main.js > public/resources/js/main.min.js -mc",
     "build:css": "stylus -u nib src/styl/main.styl -o public/resources/css/main.css",
     "postbuild:css": "cleancss public/resources/css/main.css > public/resources/css/main.min.css",
+    "sourceFix:jquery": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js\" public/index.html",
+    "sourceFix:fontawesome": "replace \"../node_modules/font-awesome/css/font-awesome.min.css\" \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\" public/index.html",
+    "sourceFix": "npm run sourceFix:jquery && npm run sourceFix:fontawesome",
     "build": "npm run build:css && npm run build:js",
     "clean": "rimraf public/css && rimraf public/js",
     "server": "python -m http.server 8080 &"
