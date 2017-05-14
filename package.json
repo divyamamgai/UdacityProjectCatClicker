@@ -1,65 +1,63 @@
 {
-  "name": "CatClicker",
-  "version": "1.0.0",
-  "description": "A simple recreation of the infamous Cat Clicker game of the Facebook.",
-  "keywords": [
-    "Cat",
-    "Clicker",
-    "Game",
-    "Udacity",
-    "Project"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/divyamamgai/UdacityProjectCatClicker.git"
-  },
-  "bugs": {
-    "url": "https://github.com/divyamamgai/UdacityProjectCatClicker/issues"
-  },
-  "author": {
-    "name": "Divya Mamgai",
-    "email": "divyamamgai21@gmail.com",
-    "url": "https://github.com/divyamamgai"
-  },
-  "homepage": "http://divyamamgai.github.io/UdacityProjectCatClicker/build",
-  "contributors": [
-    {
-      "name": "Divya Mamgai",
-      "email": "divyamamgai21@gmail.com",
-      "url": "https://github.com/divyamamgai"
+    "name": "CatClicker",
+    "version": "1.0.0",
+    "description": "A simple recreation of the infamous Cat Clicker game of the Facebook.",
+    "keywords": [
+        "Cat",
+        "Clicker",
+        "Game",
+        "Udacity",
+        "Project"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/divyamamgai/UdacityProjectCatClicker.git"
+    },
+    "bugs": {
+        "url": "https://github.com/divyamamgai/UdacityProjectCatClicker/issues"
+    },
+    "author": {
+        "name": "Divya Mamgai",
+        "email": "divyamamgai21@gmail.com",
+        "url": "https://github.com/divyamamgai"
+    },
+    "homepage": "http://divyamamgai.github.io/UdacityProjectCatClicker/public",
+    "contributors": [{
+        "name": "Divya Mamgai",
+        "email": "divyamamgai21@gmail.com",
+        "url": "https://github.com/divyamamgai"
+    }],
+    "license": "MIT",
+    "dependencies": {
+        "jquery": "latest",
+        "font-awesome": "latest"
+    },
+    "devDependencies": {
+        "jshint": "latest",
+        "fuse": "latest",
+        "uglify-js": "latest",
+        "stylus": "latest",
+        "nib": "latest",
+        "clean-css": "latest",
+        "clean-css-cli": "latest",
+        "replace": "latest",
+        "rimraf": "latest"
+    },
+    "scripts": {
+        "lint": "jshint src/js",
+        "prebuild:js": "npm run lint",
+        "build:js": "fuse -i src/js/main.js -o public/resources/js/main.js",
+        "postbuild:js": "uglifyjs public/resources/js/main.js > public/resources/js/main.min.js -mc",
+        "build:css": "stylus -u nib src/styl/main.styl -o public/resources/css/main.css",
+        "postbuild:css": "cleancss public/resources/css/main.css > public/resources/css/main.min.css",
+        "sourceFix:jquery": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js\" public/index.html",
+        "sourceFix:fontawesome": "replace \"../node_modules/font-awesome/css/font-awesome.min.css\" \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\" public/index.html",
+        "sourceFix:resources": "replace \"../public/resources/\" \"resources/\" public/index.html",
+        "sourceFix": "npm run sourceFix:jquery && npm run sourceFix:fontawesome && npm run sourceFix:resources",
+        "build:html": "cp src/index.html public/index.html",
+        "postbuild:html": "npm run sourceFix",
+        "build": "npm run build:css && npm run build:js && npm run build:html",
+        "clean": "rimraf public/resources/css/* && rimraf public/resources/js/*",
+        "start": "python -m http.server 8080 &"
     }
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "jquery": "latest",
-    "font-awesome": "latest"
-  },
-  "devDependencies": {
-    "jshint": "latest",
-    "fuse": "latest",
-    "uglify-js": "latest",
-    "stylus": "latest",
-    "nib": "latest",
-    "clean-css": "latest",
-    "clean-css-cli": "latest",
-    "replace": "latest",
-    "rimraf": "latest"
-  },
-  "scripts": {
-    "lint": "jshint src/js",
-    "prebuild:js": "npm run lint",
-    "build:js": "fuse -i src/js/main.js -o public/resources/js/main.js",
-    "postbuild:js": "uglifyjs public/resources/js/main.js > public/resources/js/main.min.js -mc",
-    "build:css": "stylus -u nib src/styl/main.styl -o public/resources/css/main.css",
-    "postbuild:css": "cleancss public/resources/css/main.css > public/resources/css/main.min.css",
-    "sourceFix:jquery": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js\" public/index.html",
-    "sourceFix:fontawesome": "replace \"../node_modules/font-awesome/css/font-awesome.min.css\" \"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\" public/index.html",
-    "sourceFix:resources": "replace \"../public/resources/\" \"resources/\" public/index.html",
-    "sourceFix": "npm run sourceFix:jquery && npm run sourceFix:fontawesome && npm run sourceFix:resources",
-    "build:html": "cp src/index.html public/index.html",
-    "postbuild:html": "npm run sourceFix",
-    "build": "npm run build:css && npm run build:js && npm run build:html",
-    "clean": "rimraf public/resources/css/* && rimraf public/resources/js/*",
-    "start": "python -m http.server 8080 &"
-  }
 }

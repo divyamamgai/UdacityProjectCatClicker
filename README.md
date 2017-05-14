@@ -1,12 +1,13 @@
-jQueryBoilerPlate
+Udacity Project Cat Clicker
 ======
-A simple boiler plate code for jQuery plugin development with NPM.
+A simple recreation of the infamous Cat Clicker game of the Facebook.
 
-1. Implements build procedure using NPM commands.
-
-2. Uses Stylus CSS preprocessor.
-
-3. To build simply run
+1. To build run -
 ```shell
-npm build
+npm run build
+```
+
+2. To start using Python Simple Server run -
+```shell
+npm run start
 ```
