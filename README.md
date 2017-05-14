@@ -11,3 +11,5 @@ npm run build
 ```shell
 npm run start
 ```
+
+For demo visit - https://divyamamgai.github.io/UdacityProjectCatClicker/public/
