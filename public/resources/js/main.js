@@ -1,37 +1,102 @@
 (function ($, w, d) {
     'use strict';
+
     /** @type JQuery */
-    var $clickCount,
-        $imageContainer,
-        $image,
-        $clickSounds,
-        $restartButton,
-        $loadingPercentage;
-    var clickCount = 0;
+    var $clickSounds;
 
-    function xhrOnError() {
-        alert('An error occurred while fetching a cure Cat image!\nRetrying...');
-        initialize();
-    }
+    /**
+     * Cat Class
+     * @param {Function} onMouseDown
+     * @constructor
+     */
+    var Cat = function (onMouseDown) {
+        /** @type JQuery */
+        this.$imageContainer = Cat.$imageContainerCache
+            .clone()
+            .data('Cat', this)
+            .on('mousedown', this.imageContainerOnMouseDown)
+            .on('mouseup', this.imageContainerOnMouseUp);
+        /** @type JQuery */
+        this.$image = $('.image', this.$imageContainer);
+        /** @type JQuery */
+        this.$restartButton = $('.restart-button', this.$imageContainer)
+            .on('click', this.restartButtonOnClick)
+            .on('mousedown mouseup', function (event) {
+                event.stopPropagation();
+            });
+        /** @type JQuery */
+        this.$loadingPercentage = $('.loading-percentage', this.$imageContainer);
+        /** @type JQuery */
+        this.$clickCount = $('.click-count', this.$imageContainer);
+        this.clickCount = 0;
+        this.onMouseDown = $.isFunction(onMouseDown) ? onMouseDown : $.noop;
+        this.initialize();
+    };
 
-    function xhrOnProgress(event) {
-        if (event.lengthComputable) {
-            $loadingPercentage.text(Math.round(event.loaded / event.total * 100) + '%');
+    Cat.prototype.imageContainerOnMouseDown = function () {
+        var self = $(this).data('Cat');
+        self.$imageContainer
+            .addClass('clicked');
+        self.$clickCount
+            .addClass('image-clicked')
+            .text(++self.clickCount);
+        self.onMouseDown();
+    };
+
+    Cat.prototype.imageContainerOnMouseUp = function () {
+        var self = $(this).data('Cat');
+        self.$imageContainer
+            .removeClass('clicked');
+        self.$clickCount
+            .removeClass('image-clicked');
+    };
+
+    /**
+     * @param {Event} event
+     */
+    Cat.prototype.restartButtonOnClick = function (event) {
+        var self = $(this).parent().data('Cat');
+        event.stopPropagation();
+        if (!self.$restartButton.hasClass('loading')) {
+            self.initialize();
         }
-    }
+    };
 
-    function initialize() {
-        $restartButton.addClass('loading');
-        $loadingPercentage.addClass('show');
+    Cat.prototype.$getImageContainer = function () {
+        return this.$imageContainer;
+    };
+
+    Cat.prototype.initialize = function () {
+
+        /** @type Cat */
+        var self = this;
+
+        /** @type JQuery */
+        var $restartButton = self.$restartButton.addClass('loading'),
+            $loadingPercentage = self.$loadingPercentage.addClass('show'),
+            $image = self.$image,
+            $clickCount = self.$clickCount;
+        self.clickCount = 0;
+
         var xhr = new XMLHttpRequest();
-        xhr.onprogress = xhrOnProgress;
-        xhr.onerror = xhrOnError;
+        xhr.onprogress = function (event) {
+            if (event.lengthComputable) {
+                $loadingPercentage.text(Math.round(event.loaded / event.total * 100) + '%');
+            }
+        };
+        xhr.onerror = function () {
+            alert('An error occurred while fetching a cure Cat image!\nRetrying...');
+            self.initialize();
+        };
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 var url = window.URL || window.webkitURL;
-                $image.css('background-image', 'url(' + url.createObjectURL(xhr.response) + ')');
-                $clickCount.text(clickCount = 0);
-                $restartButton.removeClass('loading');
+                $image
+                    .css('background-image', 'url(' + url.createObjectURL(xhr.response) + ')');
+                $clickCount
+                    .text('0');
+                $restartButton
+                    .removeClass('loading');
                 $loadingPercentage
                     .removeClass('show')
                     .text('0%');
@@ -40,30 +105,15 @@
         xhr.responseType = 'blob';
         xhr.open('GET', 'https://thecatapi.com/api/images/get?api_key=MTgyMTA2&format=src&category=dream');
         xhr.send();
-    }
+    };
 
-    function clickSoundPlay(clickSound) {
+    /** @type JQuery */
+    Cat.$imageContainerCache = $('<div class="image-container">\n    <div class="image-wrapper">\n        <div class="image"></div>\n    </div>\n    <div class="fa fa-repeat restart-button">\n        <div class="loading-percentage">0%</div>\n    </div>\n    <div class="click-count">0</div>\n</div>\n');
+
+    function playClickSound() {
+        var clickSound = $clickSounds.get(Math.floor(Math.random() * $clickSounds.length));
         clickSound.currentTime = 0;
         clickSound.play();
-    }
-
-    function imageContainerOnMouseDown() {
-        $imageContainer.addClass('clicked');
-        $clickCount.addClass('image-clicked');
-        $clickCount.text(++clickCount);
-        clickSoundPlay($clickSounds.get(Math.floor(Math.random() * $clickSounds.length)));
-    }
-
-    function imageContainerOnMouseUp() {
-        $imageContainer.removeClass('clicked');
-        $clickCount.removeClass('image-clicked');
-    }
-
-    function restartButtonOnClick(event) {
-        event.stopPropagation();
-        if (!$restartButton.hasClass('loading')) {
-            initialize();
-        }
     }
 
     $(function () {
@@ -71,17 +121,12 @@
         $clickSounds.each(function (index) {
             $clickSounds.get(index).volume = 0.2;
         });
-        $imageContainer = $('#image-container', d)
-            .on('mousedown', imageContainerOnMouseDown)
-            .on('mouseup', imageContainerOnMouseUp);
-        $image = $('#image', $imageContainer);
-        $clickCount = $('#click-count', $imageContainer);
-        $restartButton = $('#restart-button', $imageContainer)
-            .on('click', restartButtonOnClick)
-            .on('mousedown mouseup', function (event) {
-                event.stopPropagation();
-            });
-        $loadingPercentage = $('#loading-percentage', $imageContainer);
-        initialize();
+        /** @type Cat[] */
+        var cats = [new Cat(playClickSound), new Cat(playClickSound), new Cat(playClickSound)];
+        /** @type JQuery */
+        var $catContainer = $('#cat-container', d);
+        $catContainer.append(cats.map(function (cat) {
+            return cat.$getImageContainer();
+        }));
     });
 })(jQuery, window, document);

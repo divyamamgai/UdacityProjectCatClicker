@@ -21,7 +21,7 @@ html, body {
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)
     font-size: 2.8rem
     text-align: center
-    margin: 1.5rem
+    margin: 3.5rem 1.5rem 1.5rem 1.5rem
     padding: 0
     text-transform: uppercase
     letter-spacing: 0.4rem
@@ -31,20 +31,23 @@ html, body {
     }
 }
 
-#image-container {
-    left: 50vw
-    transform-origin: 50% 50%
-    transform: translateX(-50%)
+#cat-container {
+    text-align: center;
+}
+
+.image-container {
+    display: inline-block;
+    text-align: left;
     width: 100%;
     max-width: 40rem
     height: 30rem
-    margin: 0;
+    margin: 2.5rem;
     padding: 0;
     border: solid 0.4rem #212121
     border-radius: 0.8rem
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
     user-select: none
-    #image-wrapper {
+    .image-wrapper {
         position: absolute
         top: 0
         left: 0
@@ -52,7 +55,7 @@ html, body {
         height: 100%
         border-radius: 0.4rem
         overflow: hidden
-        #image {
+        .image {
             background: #000000 center no-repeat
             background-size: cover
             width: 100%
@@ -62,12 +65,12 @@ html, body {
             transition: all 0.3s ease-in-out
         }
     }
-    &.clicked #image-wrapper #image {
+    &.clicked .image-wrapper .image {
         transform: scale(1.1)
     }
 }
 
-#restart-button {
+.restart-button {
     cursor: pointer
     font-size: 2.4rem
     background-color: #E91E63
@@ -110,7 +113,7 @@ html, body {
             animation: restart-button-loading-animation 0.7s infinite linear
         }
     }
-    #loading-percentage {
+    .loading-percentage {
         position: absolute
         bottom: 1rem
         left: 0
@@ -146,7 +149,7 @@ html, body {
     }
 }
 
-#restart-button:not(.loading):hover {
+.restart-button:not(.loading):hover {
     color: #FFFFFF
     transform: translate(-50%, -50%) scale(1.2)
     box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.4)
@@ -155,7 +158,7 @@ html, body {
     }
 }
 
-#restart-button:not(.loading):active {
+.restart-button:not(.loading):active {
     background-color: #C2185B
     transform: translate(-50%, -50%) scale(1.1)
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3)
@@ -164,7 +167,7 @@ html, body {
     }
 }
 
-#click-count {
+.click-count {
     cursor: default
     font-size: 1.8rem
     font-weight: 400
@@ -181,7 +184,7 @@ html, body {
     z-index: 1
 }
 
-#click-count.image-clicked {
+.click-count.image-clicked {
     font-weight: 800
     color: #FFFFFF
     transform: scale(1.3)
