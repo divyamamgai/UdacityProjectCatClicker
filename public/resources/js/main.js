@@ -92,30 +92,31 @@
     /**
      * Cat Thumbnail Class
      * @param {Cat} cat
+     * @param {Function} [onInitialize]
      * @constructor
      */
-    var CatThumbnail = function (cat) {
+    var CatThumbnail = function (cat, onInitialize) {
         this.imageURL = undefined;
 
         /** @type Cat */
         this.cat = cat;
 
         /** @type JQuery */
-        this.$thumbnail = CatThumbnail.$thumbnailCache.clone()
+        this.$imageContainer = CatThumbnail.$thumbnailCache.clone()
             .data('CatThumbnail', this)
             .on('click', CatThumbnail.imageContainerOnClick);
 
         /** @type JQuery */
-        this.$image = $('.image', this.$thumbnail);
+        this.$image = $('.image', this.$imageContainer);
 
         /** @type JQuery */
-        this.$resetButton = $('.reset-button', this.$thumbnail)
+        this.$resetButton = $('.reset-button', this.$imageContainer)
             .on('click', CatThumbnail.resetButtonOnClick)
             .on('mousedown mouseup', function (event) {
                 event.stopPropagation();
             });
 
-        this.initialize();
+        this.initialize(onInitialize);
     };
 
     CatThumbnail.imageContainerOnClick = function () {
@@ -137,7 +138,10 @@
         }
     };
 
-    CatThumbnail.prototype.initialize = function () {
+    /**
+     * @param {Function} [onImageLoad]
+     */
+    CatThumbnail.prototype.initialize = function (onImageLoad) {
 
         /** @type CatThumbnail */
         var catThumbnail = this;
@@ -148,10 +152,16 @@
 
         Cat.getImage(function (imageURL) {
             catThumbnail.imageURL = imageURL;
+
             $image
                 .css('background-image', 'url(' + imageURL + ')');
+
             $restartButton
                 .removeClass('loading');
+
+            if ($.isFunction(onImageLoad)) {
+                onImageLoad(catThumbnail);
+            }
         }, function () {
             alert('An error occurred while fetching a cure Cat image!\nRetrying...');
             catThumbnail.initialize();
@@ -177,7 +187,9 @@
 
         /** @type CatThumbnail[] */
         var catThumbnails = [
-            new CatThumbnail(cat),
+            new CatThumbnail(cat, function (catThumbnail) {
+                catThumbnail.$imageContainer.trigger('click');
+            }),
             new CatThumbnail(cat),
             new CatThumbnail(cat),
             new CatThumbnail(cat),
@@ -186,7 +198,7 @@
         /** @type JQuery */
         var $catThumbnailContainer = $('#cat-thumbnail-container', d);
         $catThumbnailContainer.append(catThumbnails.map(function (catThumbnail) {
-            return catThumbnail.$thumbnail;
+            return catThumbnail.$imageContainer;
         }));
 
         /** @type JQuery */
