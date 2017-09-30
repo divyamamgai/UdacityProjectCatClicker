@@ -1,4 +1,4 @@
-(function ($, w, d) {
+(function ($, w, d, undefined) {
     'use strict';
 
     /** @type JQuery */
@@ -6,100 +6,74 @@
 
     /**
      * Cat Class
-     * @param {Function} onMouseDown
+     * @param {Function} onClick
      * @constructor
      */
-    var Cat = function (onMouseDown) {
+    var Cat = function (onClick) {
         /** @type JQuery */
         this.$imageContainer = Cat.$imageContainerCache
             .clone()
             .data('Cat', this)
-            .on('mousedown', this.imageContainerOnMouseDown)
-            .on('mouseup', this.imageContainerOnMouseUp);
+            .on('click', Cat.imageContainerOnClick);
+
         /** @type JQuery */
         this.$image = $('.image', this.$imageContainer);
+
         /** @type JQuery */
-        this.$restartButton = $('.restart-button', this.$imageContainer)
-            .on('click', this.restartButtonOnClick)
+        this.$resetButton = $('.reset-button', this.$imageContainer)
+            .on('click', Cat.resetButtonOnClick)
             .on('mousedown mouseup', function (event) {
                 event.stopPropagation();
             });
-        /** @type JQuery */
-        this.$loadingPercentage = $('.loading-percentage', this.$imageContainer);
+
         /** @type JQuery */
         this.$clickCount = $('.click-count', this.$imageContainer);
         this.clickCount = 0;
-        this.onMouseDown = $.isFunction(onMouseDown) ? onMouseDown : $.noop;
+
+        this.onClick = $.isFunction(onClick) ? onClick : $.noop;
+
         this.initialize();
     };
 
-    Cat.prototype.imageContainerOnMouseDown = function () {
-        var self = $(this).data('Cat');
-        self.$imageContainer
-            .addClass('clicked');
-        self.$clickCount
-            .addClass('image-clicked')
-            .text(++self.clickCount);
-        self.onMouseDown();
-    };
+    /** @type JQuery */
+    Cat.$imageContainerCache = $('<div class="image-container">\n    <div class="image-wrapper">\n        <div class="image"></div>\n    </div>\n    <div class="fa fa-repeat reset-button"></div>\n    <div class="click-count">0</div>\n</div>\n');
 
-    Cat.prototype.imageContainerOnMouseUp = function () {
-        var self = $(this).data('Cat');
-        self.$imageContainer
-            .removeClass('clicked');
-        self.$clickCount
-            .removeClass('image-clicked');
+    Cat.imageContainerOnClick = function () {
+        /** @type Cat */
+        var cat = $(this).data('Cat');
+
+        cat.$clickCount
+            .addClass('image-clicked')
+            .text(++cat.clickCount);
+
+        cat.onClick();
     };
 
     /**
      * @param {Event} event
      */
-    Cat.prototype.restartButtonOnClick = function (event) {
-        var self = $(this).parent().data('Cat');
+    Cat.resetButtonOnClick = function (event) {
+        /** @type Cat */
+        var cat = $(this).parent().data('Cat');
+
         event.stopPropagation();
-        if (!self.$restartButton.hasClass('loading')) {
-            self.initialize();
+
+        if (!cat.$resetButton.hasClass('loading')) {
+            cat.initialize();
         }
     };
 
-    Cat.prototype.$getImageContainer = function () {
-        return this.$imageContainer;
-    };
-
-    Cat.prototype.initialize = function () {
-
-        /** @type Cat */
-        var self = this;
-
-        /** @type JQuery */
-        var $restartButton = self.$restartButton.addClass('loading'),
-            $loadingPercentage = self.$loadingPercentage.addClass('show'),
-            $image = self.$image,
-            $clickCount = self.$clickCount;
-        self.clickCount = 0;
-
+    /**
+     * @param {Function} onComplete
+     * @param {Function} onError
+     */
+    Cat.getImage = function (onComplete, onError) {
         var xhr = new XMLHttpRequest();
-        xhr.onprogress = function (event) {
-            if (event.lengthComputable) {
-                $loadingPercentage.text(Math.round(event.loaded / event.total * 100) + '%');
-            }
-        };
-        xhr.onerror = function () {
-            alert('An error occurred while fetching a cure Cat image!\nRetrying...');
-            self.initialize();
-        };
+        xhr.onerror = onError;
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 var url = window.URL || window.webkitURL;
-                $image
-                    .css('background-image', 'url(' + url.createObjectURL(xhr.response) + ')');
-                $clickCount
-                    .text('0');
-                $restartButton
-                    .removeClass('loading');
-                $loadingPercentage
-                    .removeClass('show')
-                    .text('0%');
+                onComplete(url.createObjectURL(xhr.response));
             }
         };
         xhr.responseType = 'blob';
@@ -107,8 +81,84 @@
         xhr.send();
     };
 
-    /** @type JQuery */
-    Cat.$imageContainerCache = $('<div class="image-container">\n    <div class="image-wrapper">\n        <div class="image"></div>\n    </div>\n    <div class="fa fa-repeat restart-button">\n        <div class="loading-percentage">0%</div>\n    </div>\n    <div class="click-count">0</div>\n</div>\n');
+    Cat.prototype.initialize = function () {
+        /** @type Cat */
+        var cat = this;
+
+        cat.clickCount = 0;
+        cat.$clickCount.text('0');
+    };
+
+    /**
+     * Cat Thumbnail Class
+     * @param {Cat} cat
+     * @constructor
+     */
+    var CatThumbnail = function (cat) {
+        this.imageURL = undefined;
+
+        /** @type Cat */
+        this.cat = cat;
+
+        /** @type JQuery */
+        this.$thumbnail = CatThumbnail.$thumbnailCache.clone()
+            .data('CatThumbnail', this)
+            .on('click', CatThumbnail.imageContainerOnClick);
+
+        /** @type JQuery */
+        this.$image = $('.image', this.$thumbnail);
+
+        /** @type JQuery */
+        this.$resetButton = $('.reset-button', this.$thumbnail)
+            .on('click', CatThumbnail.resetButtonOnClick)
+            .on('mousedown mouseup', function (event) {
+                event.stopPropagation();
+            });
+
+        this.initialize();
+    };
+
+    CatThumbnail.imageContainerOnClick = function () {
+        /** @type CatThumbnail */
+        var catThumbnail = $(this).data('CatThumbnail');
+
+        catThumbnail.cat.$image
+            .css('background-image', 'url(' + catThumbnail.imageURL + ')');
+    };
+
+    CatThumbnail.resetButtonOnClick = function () {
+        /** @type CatThumbnail */
+        var catThumbnail = $(this).parent().data('CatThumbnail');
+
+        event.stopPropagation();
+
+        if (!catThumbnail.$resetButton.hasClass('loading')) {
+            catThumbnail.initialize();
+        }
+    };
+
+    CatThumbnail.prototype.initialize = function () {
+
+        /** @type CatThumbnail */
+        var catThumbnail = this;
+
+        /** @type JQuery */
+        var $restartButton = catThumbnail.$resetButton.addClass('loading'),
+            $image = catThumbnail.$image;
+
+        Cat.getImage(function (imageURL) {
+            catThumbnail.imageURL = imageURL;
+            $image
+                .css('background-image', 'url(' + imageURL + ')');
+            $restartButton
+                .removeClass('loading');
+        }, function () {
+            alert('An error occurred while fetching a cure Cat image!\nRetrying...');
+            catThumbnail.initialize();
+        });
+    };
+
+    CatThumbnail.$thumbnailCache = $('<div class="thumbnail image-container">\n    <div class="image-wrapper">\n        <div class="image"></div>\n    </div>\n    <div class="fa fa-repeat reset-button"></div>\n</div>');
 
     function playClickSound() {
         var clickSound = $clickSounds.get(Math.floor(Math.random() * $clickSounds.length));
@@ -121,12 +171,27 @@
         $clickSounds.each(function (index) {
             $clickSounds.get(index).volume = 0.2;
         });
-        /** @type Cat[] */
-        var cats = [new Cat(playClickSound), new Cat(playClickSound), new Cat(playClickSound)];
+
+        /** @type Cat */
+        var cat = new Cat(playClickSound);
+
+        /** @type CatThumbnail[] */
+        var catThumbnails = [
+            new CatThumbnail(cat),
+            new CatThumbnail(cat),
+            new CatThumbnail(cat),
+            new CatThumbnail(cat),
+            new CatThumbnail(cat)];
+
+        /** @type JQuery */
+        var $catThumbnailContainer = $('#cat-thumbnail-container', d);
+        $catThumbnailContainer.append(catThumbnails.map(function (catThumbnail) {
+            return catThumbnail.$thumbnail;
+        }));
+
         /** @type JQuery */
         var $catContainer = $('#cat-container', d);
-        $catContainer.append(cats.map(function (cat) {
-            return cat.$getImageContainer();
-        }));
+
+        $catContainer.append(cat.$imageContainer);
     });
 })(jQuery, window, document);
